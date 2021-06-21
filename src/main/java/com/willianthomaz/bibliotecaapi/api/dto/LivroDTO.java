@@ -1,4 +1,4 @@
-package com.willianthomaz.bibliotecaapi.api.resource.dto;
+package com.willianthomaz.bibliotecaapi.api.dto;
 
 import lombok.*;
 

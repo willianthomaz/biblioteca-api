@@ -1,4 +1,4 @@
-package com.willianthomaz.bibliotecaapi.api.resource;
+package com.willianthomaz.bibliotecaapi.api;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
