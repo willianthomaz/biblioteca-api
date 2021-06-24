@@ -14,18 +14,18 @@ import java.util.List;
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
 
     @Query(value = " select case when ( count(l.id) > 0 ) then true else false end " +
-            " from Emprestimo l where l.livro = :livro and ( l.returned is null or l.returned is false ) ")
-    boolean existsByBookAndNotReturned( @Param("livro") Livro livro );
+            " from Emprestimo l where l.livro = :livro and ( l.devolvido is null or l.devolvido is false ) ")
+    boolean existsByLivroAndNotDevolvido( @Param("livro") Livro livro );
 
     @Query( value = " select l from Emprestimo as l join l.livro as b where b.isbn = :isbn or l.cliente =:cliente ")
-    Page<Emprestimo> findByBookIsbnOrCustomer(
+    Page<Emprestimo> findByLivroIsbnOrCliente(
             @Param("isbn") String isbn,
             @Param("cliente") String cliente,
             Pageable pageable
     );
 
-    Page<Emprestimo> findByBook( Livro livro, Pageable pageable );
+    Page<Emprestimo> findByLivro( Livro livro, Pageable pageable );
 
-    @Query(" select l from Emprestimo l where l.dataEmprestimo <= :haTresDias and ( l.returned is null or l.returned is false ) ")
-    List<Emprestimo> findByLoanDateLessThanAndNotReturned(@Param("haTresDias") LocalDate haTresDias );
+    @Query(" select l from Emprestimo l where l.dataEmprestimo <= :haTresDias and ( l.devolvido is null or l.devolvido is false ) ")
+    List<Emprestimo> findByEmprestimoDateLessThanAndNotDevolvido(@Param("haTresDias") LocalDate haTresDias );
 }
