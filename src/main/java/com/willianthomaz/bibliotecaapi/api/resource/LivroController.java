@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/livros")
 @RequiredArgsConstructor
-@Api("Book API")
+@Api("Livro API")
 @Slf4j
 public class LivroController {
 

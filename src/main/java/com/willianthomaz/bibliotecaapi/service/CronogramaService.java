@@ -15,7 +15,7 @@ public class CronogramaService {
 
     private static final String CRONOGRAMA_EMPRESTIMOS_ATRASADOS = "0 0 0 1/1 * ?";
 
-    @Value("${application.mail.lateloans.message}")
+    @Value("${application.mail.emprestimosAtrasados.message}")
     private String message;
 
     private final EmprestimoService emprestimoService;
