@@ -30,153 +30,153 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
- class EmprestimoServiceTest {
+class EmprestimoServiceTest {
 
-        EmprestimoService service;
+    EmprestimoService service;
 
-        @MockBean
-        EmprestimoRepository repository;
+    @MockBean
+    EmprestimoRepository repository;
 
-        @BeforeEach
-        public void setUp(){
-            this.service = new EmprestimoServiceImpl(repository);
-        }
-
-        @Test
-        @DisplayName("Deve salvar um empréstimo")
-         void saveEmprestimoTest(){
-            Livro livro = Livro.builder().id(1l).build();
-            String cliente = "Fulano";
-
-            Emprestimo savingEmprestimo =
-                    Emprestimo.builder()
-                            .livro(livro)
-                            .cliente(cliente)
-                            .dataEmprestimo(LocalDate.now())
-                            .build();
-
-            Emprestimo savedEmprestimo = Emprestimo.builder()
-                    .id(1l)
-                    .dataEmprestimo(LocalDate.now())
-                    .cliente(cliente)
-                    .livro(livro).build();
-
-
-            when( repository.existsByLivroAndNotDevolvido(livro) ).thenReturn(false);
-            when( repository.save(savingEmprestimo) ).thenReturn( savedEmprestimo );
-
-            Emprestimo emprestimo = service.save(savingEmprestimo);
-
-            assertThat(emprestimo.getId()).isEqualTo(savedEmprestimo.getId());
-            assertThat(emprestimo.getLivro().getId()).isEqualTo(savedEmprestimo.getLivro().getId());
-            assertThat(emprestimo.getCliente()).isEqualTo(savedEmprestimo.getCliente());
-            assertThat(emprestimo.getDataEmprestimo()).isEqualTo(savedEmprestimo.getDataEmprestimo());
-        }
-
-        @Test
-        @DisplayName("Deve lançar erro de negócio ao salvar um empréstimo com livro já emprestado")
-         void loanedLivroSaveTest(){
-            Livro livro = Livro.builder().id(1l).build();
-            String cliente = "Fulano";
-
-            Emprestimo savingEmprestimo =
-                    Emprestimo.builder()
-                            .livro(livro)
-                            .cliente(cliente)
-                            .dataEmprestimo(LocalDate.now())
-                            .build();
-
-            when(repository.existsByLivroAndNotDevolvido(livro)).thenReturn(true);
-
-            Throwable exception = catchThrowable(() -> service.save(savingEmprestimo));
-
-            assertThat(exception)
-                    .isInstanceOf(BusinessException.class)
-                    .hasMessage("Livro já emprestado");
-
-            verify(repository, never()).save(savingEmprestimo);
-
-        }
-
-        @Test
-        @DisplayName(" Deve obter as informações de um empréstimo pelo ID")
-         void getEmprestimoDetaisTest(){
-            //cenário
-            Long id = 1l;
-
-            Emprestimo emprestimo = createEmprestimo();
-            emprestimo.setId(id);
-
-            Mockito.when( repository.findById(id) ).thenReturn(Optional.of(emprestimo));
-
-            //execucao
-            Optional<Emprestimo> result = service.getById(id);
-
-            //verificacao
-            assertThat(result.isPresent()).isTrue();
-            assertThat(result.get().getId()).isEqualTo(id);
-            assertThat(result.get().getCliente()).isEqualTo(emprestimo.getCliente());
-            assertThat(result.get().getLivro()).isEqualTo(emprestimo.getLivro());
-            assertThat(result.get().getDataEmprestimo()).isEqualTo(emprestimo.getDataEmprestimo());
-
-            verify( repository ).findById(id);
-
-        }
-
-        @Test
-        @DisplayName("Deve atualizar um empréstimo.")
-        void updateEmprestimoTest(){
-            Emprestimo emprestimo = createEmprestimo();
-            emprestimo.setId(1l);
-            emprestimo.setDevolvido(true);
-
-            when( repository.save(emprestimo) ).thenReturn( emprestimo );
-
-            Emprestimo updatedEmprestimo = service.update(emprestimo);
-
-            assertThat(updatedEmprestimo.getDevolvido()).isTrue();
-            verify(repository).save(emprestimo);
-        }
-
-        @Test
-        @DisplayName("Deve filtrar empréstimos pelas propriedades")
-         void findEmprestimoTest(){
-            //cenario
-            EmprestimoFiltroDTO emprestimoFiltroDTO = EmprestimoFiltroDTO.builder().cliente("Fulano").isbn("321").build();
-
-            Emprestimo emprestimo = createEmprestimo();
-            emprestimo.setId(1l);
-            PageRequest pageRequest = PageRequest.of(0, 10);
-            List<Emprestimo> lista = Arrays.asList(emprestimo);
-
-            Page<Emprestimo> page = new PageImpl<Emprestimo>(lista, pageRequest, lista.size());
-            when( repository.findByLivroIsbnOrCliente(
-                    Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.any(PageRequest.class))
-            )
-                    .thenReturn(page);
-
-            //execucao
-            Page<Emprestimo> result = service.find( emprestimoFiltroDTO, pageRequest );
-
-
-            //verificacoes
-            assertThat(result.getTotalElements()).isEqualTo(1);
-            assertThat(result.getContent()).isEqualTo(lista);
-            assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
-            assertThat(result.getPageable().getPageSize()).isEqualTo(10);
-        }
-
-        public static Emprestimo createEmprestimo(){
-            Livro livro = Livro.builder().id(1l).build();
-            String cliente = "Fulano";
-
-            return Emprestimo.builder()
-                    .livro(livro)
-                    .cliente(cliente)
-                    .dataEmprestimo(LocalDate.now())
-                    .build();
-        }
+    @BeforeEach
+    public void setUp() {
+        this.service = new EmprestimoServiceImpl(repository);
     }
+
+    @Test
+    @DisplayName("Deve salvar um empréstimo")
+    void saveEmprestimoTest() {
+        Livro livro = Livro.builder().id(1l).build();
+        String cliente = "Fulano";
+
+        Emprestimo savingEmprestimo =
+                Emprestimo.builder()
+                        .livro(livro)
+                        .cliente(cliente)
+                        .dataEmprestimo(LocalDate.now())
+                        .build();
+
+        Emprestimo savedEmprestimo = Emprestimo.builder()
+                .id(1l)
+                .dataEmprestimo(LocalDate.now())
+                .cliente(cliente)
+                .livro(livro).build();
+
+
+        when(repository.existsByLivroAndNotDevolvido(livro)).thenReturn(false);
+        when(repository.save(savingEmprestimo)).thenReturn(savedEmprestimo);
+
+        Emprestimo emprestimo = service.save(savingEmprestimo);
+
+        assertThat(emprestimo.getId()).isEqualTo(savedEmprestimo.getId());
+        assertThat(emprestimo.getLivro().getId()).isEqualTo(savedEmprestimo.getLivro().getId());
+        assertThat(emprestimo.getCliente()).isEqualTo(savedEmprestimo.getCliente());
+        assertThat(emprestimo.getDataEmprestimo()).isEqualTo(savedEmprestimo.getDataEmprestimo());
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro de negócio ao salvar um empréstimo com livro já emprestado")
+    void loanedLivroSaveTest() {
+        Livro livro = Livro.builder().id(1l).build();
+        String cliente = "Fulano";
+
+        Emprestimo savingEmprestimo =
+                Emprestimo.builder()
+                        .livro(livro)
+                        .cliente(cliente)
+                        .dataEmprestimo(LocalDate.now())
+                        .build();
+
+        when(repository.existsByLivroAndNotDevolvido(livro)).thenReturn(true);
+
+        Throwable exception = catchThrowable(() -> service.save(savingEmprestimo));
+
+        assertThat(exception)
+                .isInstanceOf(BusinessException.class)
+                .hasMessage("Livro já emprestado");
+
+        verify(repository, never()).save(savingEmprestimo);
+
+    }
+
+    @Test
+    @DisplayName(" Deve obter as informações de um empréstimo pelo ID")
+    void getEmprestimoDetaisTest() {
+        //cenário
+        Long id = 1l;
+
+        Emprestimo emprestimo = createEmprestimo();
+        emprestimo.setId(id);
+
+        Mockito.when(repository.findById(id)).thenReturn(Optional.of(emprestimo));
+
+        //execucao
+        Optional<Emprestimo> result = service.getById(id);
+
+        //verificacao
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result.get().getId()).isEqualTo(id);
+        assertThat(result.get().getCliente()).isEqualTo(emprestimo.getCliente());
+        assertThat(result.get().getLivro()).isEqualTo(emprestimo.getLivro());
+        assertThat(result.get().getDataEmprestimo()).isEqualTo(emprestimo.getDataEmprestimo());
+
+        verify(repository).findById(id);
+
+    }
+
+    @Test
+    @DisplayName("Deve atualizar um empréstimo.")
+    void updateEmprestimoTest() {
+        Emprestimo emprestimo = createEmprestimo();
+        emprestimo.setId(1l);
+        emprestimo.setDevolvido(true);
+
+        when(repository.save(emprestimo)).thenReturn(emprestimo);
+
+        Emprestimo updatedEmprestimo = service.update(emprestimo);
+
+        assertThat(updatedEmprestimo.getDevolvido()).isTrue();
+        verify(repository).save(emprestimo);
+    }
+
+    @Test
+    @DisplayName("Deve filtrar empréstimos pelas propriedades")
+    void findEmprestimoTest() {
+        //cenario
+        EmprestimoFiltroDTO emprestimoFiltroDTO = EmprestimoFiltroDTO.builder().cliente("Fulano").isbn("321").build();
+
+        Emprestimo emprestimo = createEmprestimo();
+        emprestimo.setId(1l);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        List<Emprestimo> lista = Arrays.asList(emprestimo);
+
+        Page<Emprestimo> page = new PageImpl<Emprestimo>(lista, pageRequest, lista.size());
+        when(repository.findByLivroIsbnOrCliente(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(PageRequest.class))
+        )
+                .thenReturn(page);
+
+        //execucao
+        Page<Emprestimo> result = service.find(emprestimoFiltroDTO, pageRequest);
+
+
+        //verificacoes
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent()).isEqualTo(lista);
+        assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageable().getPageSize()).isEqualTo(10);
+    }
+
+    public static Emprestimo createEmprestimo() {
+        Livro livro = Livro.builder().id(1l).build();
+        String cliente = "Fulano";
+
+        return Emprestimo.builder()
+                .livro(livro)
+                .cliente(cliente)
+                .dataEmprestimo(LocalDate.now())
+                .build();
+    }
+}
 
