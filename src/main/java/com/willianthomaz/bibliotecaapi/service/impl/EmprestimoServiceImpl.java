@@ -30,7 +30,7 @@ public class EmprestimoServiceImpl implements EmprestimoService {
     @Override
     public Emprestimo save(Emprestimo emprestimo ) {
        if( repository.existsByLivroAndNotDevolvido(emprestimo.getLivro()) ){
-            throw new BusinessException("Book already loaned");
+            throw new BusinessException("Livro já emprestado");
         }
         return repository.save(emprestimo);
     }

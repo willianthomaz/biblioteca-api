@@ -34,7 +34,7 @@ public class EmprestimoController {
     @ResponseStatus(HttpStatus.CREATED)
     public Long create(@RequestBody EmprestimoDTO dto) {
         Livro livro = livroService
-                .getBookByIsbn(dto.getIsbn())
+                .getLivroByIsbn(dto.getIsbn())
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.BAD_REQUEST, "Livro não encontrado para isbn aprovado"));
         Emprestimo entity = Emprestimo.builder()

@@ -12,7 +12,7 @@
 	<artifactId>biblioteca-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>biblioteca-api</name>
-	<description>Projeto de controle de aluguel de livros</description>
+	<description>Projeto de controle de alugueis de livros</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

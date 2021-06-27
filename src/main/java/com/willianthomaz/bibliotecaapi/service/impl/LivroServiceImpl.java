@@ -3,6 +3,7 @@ package com.willianthomaz.bibliotecaapi.service.impl;
 import com.willianthomaz.bibliotecaapi.exception.BusinessException;
 import com.willianthomaz.bibliotecaapi.model.entity.Livro;
 import com.willianthomaz.bibliotecaapi.model.repository.LivroRepository;
+import com.willianthomaz.bibliotecaapi.service.LivroService;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class LivroServiceImpl implements com.willianthomaz.bibliotecaapi.service.LivroService {
+public class LivroServiceImpl implements LivroService {
 
     private LivroRepository repository;
 
@@ -62,7 +63,7 @@ public class LivroServiceImpl implements com.willianthomaz.bibliotecaapi.service
     }
 
     @Override
-    public Optional<Livro> getBookByIsbn(String isbn) {
+    public Optional<Livro> getLivroByIsbn(String isbn) {
         return repository.findByIsbn(isbn);
     }
 

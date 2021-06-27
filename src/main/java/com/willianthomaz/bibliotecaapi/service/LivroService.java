@@ -18,6 +18,6 @@ public interface LivroService {
 
     Page<Livro> find(Livro filter, Pageable pageRequest );
 
-    Optional<Livro> getBookByIsbn(String isbn);
+    Optional<Livro> getLivroByIsbn(String isbn);
 }
 
