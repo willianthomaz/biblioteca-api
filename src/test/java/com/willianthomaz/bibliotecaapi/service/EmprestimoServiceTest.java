@@ -1,4 +1,4 @@
-package com.willianthomaz.bibliotecaapi.api.service;
+package com.willianthomaz.bibliotecaapi.service;
 
 import com.willianthomaz.bibliotecaapi.api.dto.EmprestimoFiltroDTO;
 import com.willianthomaz.bibliotecaapi.exception.BusinessException;
